@@ -1,3 +1,14 @@
+local plr = game.Players.LocalPlayer
+local chr = plr.Character
+local hum = chr:WaitForChild('Humanoid')
+local hrp = chr:WaitForChild('HumanoidRootPart')
+local rs = game:GetService('RunService')
+local uis = game:GetService('UserInputService')
+local supportedStatus = 'Unsupported'
+local ts = game:GetService('TweenService')
+local gameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+local mouse = plr:GetMouse()
+
 function randomString(length)
 	local length = length or 20
 	local stringVars = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7','8','9','0'}
@@ -13,6 +24,12 @@ function randomString(length)
 	return str
 end
 
+function randomColor()
+local color = Color3.fromRGB(math.random(1,255),math.random(1,255),math.random(1,255))
+
+return color
+end
+
 local Sticky = {}
 
 function Sticky:CreateWindow()
@@ -26,35 +43,16 @@ local Topbar = Instance.new("Frame")
 local Title = Instance.new("TextLabel")
 local Discord = Instance.new("TextButton")
 local GameTitle = Instance.new("TextLabel")
-local Main = Instance.new("ScrollingFrame")
-local Section = Instance.new("Frame")
-local TextLabel = Instance.new("TextLabel")
-local ImageLabel = Instance.new("ImageLabel")
-local Button = Instance.new("Frame")
-local ImageLabel_2 = Instance.new("ImageLabel")
-local TextLabel_2 = Instance.new("TextLabel")
-local TextButton_2 = Instance.new("TextButton")
-local Toggle = Instance.new("Frame")
-local Toggled = Instance.new("Frame")
-local TextLabel_3 = Instance.new("TextLabel")
-local TextButton_3 = Instance.new("TextButton")
-local Slider = Instance.new("Frame")
-local TextLabel_4 = Instance.new("TextLabel")
-local ImageLabel_3 = Instance.new("ImageLabel")
-local Slider_2 = Instance.new("Frame")
-local TextButton_4 = Instance.new("TextButton")
-local UIGridLayout = Instance.new("UIGridLayout")
-local Dropdown = Instance.new("Frame")
-local ImageLabel_4 = Instance.new("ImageLabel")
-local TextLabel_5 = Instance.new("TextLabel")
-local TextButton_5 = Instance.new("TextButton")
-local ScrollingFrame = Instance.new("ScrollingFrame")
-local UIGridLayout_2 = Instance.new("UIGridLayout")
-local DropdownButton = Instance.new("Frame")
-local ImageLabel_5 = Instance.new("ImageLabel")
-local TextLabel_6 = Instance.new("TextLabel")
-local TextButton_6 = Instance.new("TextButton")
-local UIPadding_2 = Instance.new("UIPadding")
+local Spliter = Instance.new('Frame')
+local RAHHH = {}
+local Windows = {}
+
+Spliter.Name = randomString()
+Spliter.BackgroundColor3 = Color3.new(0,0,0)
+Spliter.Parent = GameTitle
+Spliter.Size = UDim2.new(0.5,0,0.1,0)
+Spliter.AnchorPoint = Vector2.new(0.5,0.5)
+Spliter.Position = UDim2.new(0.5,0,0.5,0)
 
 StickyHub.Name = randomString()
 StickyHub.Parent = game:GetService('CoreGui')
@@ -146,35 +144,450 @@ GameTitle.BackgroundTransparency = 1
 GameTitle.BorderSizePixel = 0
 GameTitle.Position = UDim2.new(0.555454552, 0, 0, 0)
 GameTitle.Selectable = true
-GameTitle.Size = UDim2.new(0.610909104, 0, 0.48888889, 0)
+GameTitle.Size = UDim2.new(0.610909104, 0, 1, 0)
 GameTitle.Font = Enum.Font.Gotham
-GameTitle.Text = "Game Name"
+GameTitle.Text = gameName..'\n'..supportedStatus
 GameTitle.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
 GameTitle.TextScaled = true
-GameTitle.TextSize = 20
+GameTitle.TextSize = 0
 GameTitle.TextWrapped = true
 GameTitle.TextYAlignment = Enum.TextYAlignment.Top
 
-Main.Name = randomString()
-Main.Parent = Background
-Main.AnchorPoint = Vector2.new(1, 0.5)
-Main.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
-Main.BackgroundTransparency = 0.4000000059604645
-Main.BorderSizePixel = 0
-Main.Position = UDim2.new(1, 0, 0.550000012, 0)
-Main.Selectable = false
-Main.Size = UDim2.new(0.699999988, 0, 0.899999976, 0)
-Main.CanvasSize = UDim2.new(0, 0, 1, 0)
-Main.ScrollBarThickness = 0
+local Window = {}
+function Window:CreateTab(text)
+local TextButton = Instance.new("TextButton")
+local ScrollingFrame = Instance.new("ScrollingFrame")
+local UIGridLayout = Instance.new("UIListLayout")
+local UIPadding_5 = Instance.new('UIPadding')
+TextButton.Name = randomString()
+TextButton.Parent = Tabs
+TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton.BackgroundTransparency = 1
+TextButton.BorderSizePixel = 0
+TextButton.Size = UDim2.new(1, 0, 0.100000001, 0)
+TextButton.AutoButtonColor = false
+TextButton.Font = Enum.Font.Gotham
+TextButton.Text = text
+TextButton.TextColor3 = Color3.new(0.352941, 0.352941, 0.352941)
+TextButton.TextSize = 14
+TextButton.TextWrapped = true
+
+ScrollingFrame.Visible = false
+ScrollingFrame.Name = randomString()
+ScrollingFrame.Parent = Background
+ScrollingFrame.AnchorPoint = Vector2.new(1, 0.5)
+ScrollingFrame.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
+ScrollingFrame.BackgroundTransparency = 0.4000000059604645
+ScrollingFrame.BorderSizePixel = 0
+ScrollingFrame.Position = UDim2.new(1, 0, 0.550000012, 0)
+ScrollingFrame.Selectable = false
+ScrollingFrame.Size = UDim2.new(0.699999988, 0, 0.899999976, 0)
+ScrollingFrame.CanvasSize = UDim2.new(0, 0, 1, 0)
+ScrollingFrame.ScrollBarThickness = 0
+
+table.insert(Windows, ScrollingFrame)
+table.insert(RAHHH, TextButton)
+
+UIPadding_5.PaddingBottom = UDim.new(0, 5)
+UIPadding_5.PaddingTop = UDim.new(0,5)
+UIGridLayout.Name = randomString()
+UIGridLayout.Parent = ScrollingFrame
+UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIGridLayout.Padding = UDim.new(0,5)
+
+TextButton.MouseButton1Down:Connect(function()
+for i,v in pairs(Windows) do
+   
+        v.Visible = false
+end
+
+for i,v in pairs(RAHHH) do
+    v.TextColor3 = Color3.new(0.352941, 0.352941, 0.352941)
+end
+
+TextButton.TextColor3 = Color3.new(0.552941, 0.552941, 0.552941)
+ScrollingFrame.Visible = true
+end)
+
+local Tab = {}
+function Tab:CreateButton(text, Call)
+    local Button = Instance.new("Frame")
+local ImageLabel_2 = Instance.new("ImageLabel")
+local TextLabel_2 = Instance.new("TextLabel")
+local TextButton_2 = Instance.new("TextButton")
+    Button.Name = randomString()
+Button.Parent = ScrollingFrame
+Button.AnchorPoint = Vector2.new(0.5, 0.5)
+Button.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
+Button.BackgroundTransparency = 0.20000000298023224
+Button.BorderSizePixel = 0
+Button.Position = UDim2.new(0.370129883, 0, 0, 0)
+Button.Size = UDim2.new(1, 0, 0, 47)
+
+ImageLabel_2.Name = randomString()
+ImageLabel_2.Parent = Button
+ImageLabel_2.AnchorPoint = Vector2.new(1, 0)
+ImageLabel_2.BackgroundColor3 = Color3.new(1, 1, 1)
+ImageLabel_2.BackgroundTransparency = 1
+ImageLabel_2.BorderSizePixel = 0
+ImageLabel_2.Position = UDim2.new(0.949999988, 0, 0.300000012, 0)
+ImageLabel_2.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_2.Image = "rbxassetid://10734898355"
+
+TextLabel_2.Name = randomString()
+TextLabel_2.Parent = Button
+TextLabel_2.AnchorPoint = Vector2.new(0.5, 0.5)
+TextLabel_2.BackgroundColor3 = Color3.new(1, 1, 1)
+TextLabel_2.BackgroundTransparency = 1
+TextLabel_2.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextLabel_2.Size = UDim2.new(0.949999988, 0, 0.5, 0)
+TextLabel_2.Font = Enum.Font.Gotham
+TextLabel_2.Text = text
+TextLabel_2.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
+TextLabel_2.TextScaled = true
+TextLabel_2.TextSize = 14
+TextLabel_2.TextWrapped = true
+TextLabel_2.TextXAlignment = Enum.TextXAlignment.Left
+
+TextButton_2.Name = randomString()
+TextButton_2.Parent = Button
+TextButton_2.AnchorPoint = Vector2.new(0.5, 0.5)
+TextButton_2.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton_2.BackgroundTransparency = 1
+TextButton_2.BorderSizePixel = 0
+TextButton_2.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextButton_2.Size = UDim2.new(1, 0, 1, 0)
+TextButton_2.Font = Enum.Font.SourceSans
+TextButton_2.Text = ""
+TextButton_2.TextColor3 = Color3.new(0, 0, 0)
+TextButton_2.TextSize = 14
+
+TextButton_2.MouseButton1Down:Connect(function()
+    pcall(Call)
+end)
+end
+
+function Tab:CreateDropdown(text, Options, Call)
+local buttons = {}
+local Dropdown = Instance.new("Frame")
+local ImageLabel_4 = Instance.new("ImageLabel")
+local TextLabel_5 = Instance.new("TextLabel")
+local TextButton_5 = Instance.new("TextButton")
+local ScrollingFrame5 = Instance.new("ScrollingFrame")
+local UIGridLayout_2 = Instance.new("UIGridLayout")
+local UIPadding_2 = Instance.new("UIPadding")
+local Searchbar = Instance.new("Frame")
+local ImageLabel_51 = Instance.new("ImageLabel")
+local TextLabel_61 = Instance.new("TextBox")
+local TextButton_61 = Instance.new("TextButton")
+
+local Option = nil
+Dropdown.Name = randomString()
+Dropdown.Parent = ScrollingFrame
+Dropdown.AnchorPoint = Vector2.new(0.5, 0.5)
+Dropdown.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
+Dropdown.BackgroundTransparency = 0.20000000298023224
+Dropdown.BorderSizePixel = 0
+Dropdown.Position = UDim2.new(0.370129883, 0, 0, 0)
+Dropdown.Size = UDim2.new(1, 0, 0, 47)
+
+ImageLabel_4.Name = randomString()
+ImageLabel_4.Parent = Dropdown
+ImageLabel_4.AnchorPoint = Vector2.new(1, 0)
+ImageLabel_4.BackgroundColor3 = Color3.new(1, 1, 1)
+ImageLabel_4.BackgroundTransparency = 1
+ImageLabel_4.BorderSizePixel = 0
+ImageLabel_4.Position = UDim2.new(0.949999988, 0, 0.300000012, 0)
+ImageLabel_4.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_4.Image = "rbxassetid://10723433811"
+
+TextLabel_5.Name = randomString()
+TextLabel_5.Parent = Dropdown
+TextLabel_5.AnchorPoint = Vector2.new(0.5, 0.5)
+TextLabel_5.BackgroundColor3 = Color3.new(1, 1, 1)
+TextLabel_5.BackgroundTransparency = 1
+TextLabel_5.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextLabel_5.Size = UDim2.new(0.949999988, 0, 0.5, 0)
+TextLabel_5.Font = Enum.Font.Gotham
+TextLabel_5.Text = text
+TextLabel_5.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
+TextLabel_5.TextScaled = true
+TextLabel_5.TextSize = 14
+TextLabel_5.TextWrapped = true
+TextLabel_5.TextXAlignment = Enum.TextXAlignment.Left
+
+TextButton_5.Name = randomString()
+TextButton_5.Parent = Dropdown
+TextButton_5.AnchorPoint = Vector2.new(0.5, 0.5)
+TextButton_5.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton_5.BackgroundTransparency = 1
+TextButton_5.BorderSizePixel = 0
+TextButton_5.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextButton_5.Size = UDim2.new(1, 0, 1, 0)
+TextButton_5.Font = Enum.Font.SourceSans
+TextButton_5.Text = ""
+TextButton_5.TextColor3 = Color3.new(0, 0, 0)
+TextButton_5.TextSize = 14
+
+ScrollingFrame5.Name = randomString()
+ScrollingFrame5.Parent = ScrollingFrame
+ScrollingFrame5.Active = true
+ScrollingFrame5.AnchorPoint = Vector2.new(0.5, 0)
+ScrollingFrame5.BackgroundColor3 = Color3.new(1, 1, 1)
+ScrollingFrame5.BackgroundTransparency = 1
+ScrollingFrame5.BorderSizePixel = 0
+ScrollingFrame5.Position = UDim2.new(0.5, 0, 1, 0)
+ScrollingFrame5.Size = UDim2.new(1, 0, 0.2, 0)
+ScrollingFrame5.ScrollBarThickness = 2
+ScrollingFrame5.CanvasSize = UDim2.new(0,0,1,0)
+ScrollingFrame5.AutomaticCanvasSize = 'Y'
+ScrollingFrame5.Visible = false
+ScrollingFrame5.ZIndex = 10
+
+UIGridLayout_2.Name = randomString()
+UIGridLayout_2.Parent = ScrollingFrame5
+UIGridLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
+UIGridLayout_2.CellPadding = UDim2.new(0, 0, 0, 5)
+UIGridLayout_2.CellSize = UDim2.new(1, 0, 0, 21)
+UIPadding_2.Name = randomString()
+UIPadding_2.Parent = ScrollingFrame5
+UIPadding_2.PaddingTop = UDim.new(0, 5)
+
+Searchbar.Name = randomString()
+Searchbar.Parent = ScrollingFrame5
+Searchbar.AnchorPoint = Vector2.new(0.5, 0.5)
+Searchbar.BackgroundColor3 = Color3.new(0.0470588, 0.0470588, 0.0470588)
+Searchbar.BorderSizePixel = 0
+Searchbar.Position = UDim2.new(0.370129883, 0, 0, 0)
+Searchbar.ZIndex = 11
+
+ImageLabel_51.Name = randomString()
+ImageLabel_51.Parent = Searchbar
+ImageLabel_51.AnchorPoint = Vector2.new(1, 0.5)
+ImageLabel_51.BackgroundColor3 = Color3.new(1, 1, 1)
+ImageLabel_51.BackgroundTransparency = 1
+ImageLabel_51.BorderSizePixel = 0
+ImageLabel_51.Position = UDim2.new(0.949999988, 0, 0.5, 0)
+ImageLabel_51.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_51.Image = "rbxassetid://10734909196"
+ImageLabel_51.ZIndex = 11
+
+TextLabel_61.Name = randomString()
+TextLabel_61.Parent = Searchbar
+TextLabel_61.AnchorPoint = Vector2.new(0.5, 0.5)
+TextLabel_61.BackgroundColor3 = Color3.new(1, 1, 1)
+TextLabel_61.BackgroundTransparency = 1
+TextLabel_61.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextLabel_61.Size = UDim2.new(0.949999988, 0, 0.5, 0)
+TextLabel_61.Font = Enum.Font.Gotham
+TextLabel_61.Text = 'Searchbar: '
+TextLabel_61.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
+TextLabel_61.TextScaled = true
+TextLabel_61.TextSize = 14
+TextLabel_61.TextWrapped = true
+TextLabel_61.TextXAlignment = Enum.TextXAlignment.Left
+TextLabel_61.ZIndex = 11
+
+TextLabel_61:GetPropertyChangedSignal('Text'):Connect(function()
+    for i,v in pairs(buttons) do
+        if not string.lower(v.Text):match(string.lower(TextLabel_61.Text)) then
+            v.Parent.Visible = false
+        else
+            v.Parent.Visible = true
+        end
+    end
+end)
+
+TextButton_5.MouseButton1Down:Connect(function()
+    ScrollingFrame5.Visible = not ScrollingFrame5.Visible
+end)
+
+for i,v in pairs(Options) do
+
+local DropdownButton = Instance.new("Frame")
+local ImageLabel_5 = Instance.new("ImageLabel")
+local TextLabel_6 = Instance.new("TextLabel")
+table.insert(buttons,TextLabel_6)
+local TextButton_6 = Instance.new("TextButton")
+DropdownButton.Name = randomString()
+DropdownButton.Parent = ScrollingFrame5
+DropdownButton.AnchorPoint = Vector2.new(0.5, 0.5)
+DropdownButton.BackgroundColor3 = Color3.new(0.0470588, 0.0470588, 0.0470588)
+DropdownButton.BorderSizePixel = 0
+DropdownButton.Position = UDim2.new(0.370129883, 0, 0, 0)
+DropdownButton.ZIndex = 11
+
+ImageLabel_5.Name = randomString()
+ImageLabel_5.Parent = DropdownButton
+ImageLabel_5.AnchorPoint = Vector2.new(1, 0.5)
+ImageLabel_5.BackgroundColor3 = Color3.new(1, 1, 1)
+ImageLabel_5.BackgroundTransparency = 1
+ImageLabel_5.BorderSizePixel = 0
+ImageLabel_5.Position = UDim2.new(0.949999988, 0, 0.5, 0)
+ImageLabel_5.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_5.Image = "rbxassetid://10734898355"
+ImageLabel_5.ZIndex = 11
+
+TextLabel_6.Name = randomString()
+TextLabel_6.Parent = DropdownButton
+TextLabel_6.AnchorPoint = Vector2.new(0.5, 0.5)
+TextLabel_6.BackgroundColor3 = Color3.new(1, 1, 1)
+TextLabel_6.BackgroundTransparency = 1
+TextLabel_6.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextLabel_6.Size = UDim2.new(0.949999988, 0, 0.5, 0)
+TextLabel_6.Font = Enum.Font.Gotham
+TextLabel_6.Text = v
+TextLabel_6.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
+TextLabel_6.TextScaled = true
+TextLabel_6.TextSize = 14
+TextLabel_6.TextWrapped = true
+TextLabel_6.TextXAlignment = Enum.TextXAlignment.Left
+TextLabel_6.ZIndex = 11
+
+TextButton_6.Name = randomString()
+TextButton_6.Parent = DropdownButton
+TextButton_6.AnchorPoint = Vector2.new(0.5, 0.5)
+TextButton_6.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton_6.BackgroundTransparency = 1
+TextButton_6.BorderSizePixel = 0
+TextButton_6.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextButton_6.Size = UDim2.new(1, 0, 1, 0)
+TextButton_6.Font = Enum.Font.SourceSans
+TextButton_6.Text = ""
+TextButton_6.TextColor3 = Color3.new(0, 0, 0)
+TextButton_6.TextSize = 14
+TextButton_6.ZIndex = 11
+
+TextButton_6.MouseButton1Down:Connect(function()
+    Option = v
+    pcall(Call, Option)
+end)
+    end
+end
+
+function Tab:CreateSlider(text,low,high,Call)
+    local Sliding = false
+    local Value = low or 0
+    local maxvalue = high or 100
+    local minvalue = low or 0
+    
+    local Slider = Instance.new("Frame")
+local TextLabel_4 = Instance.new("TextLabel")
+local ImageLabel_3 = Instance.new("ImageLabel")
+local Slider_2 = Instance.new("Frame")
+local Slider_3 = Instance.new("Frame")
+local TextButton_4 = Instance.new("TextButton")
+local UICorner = Instance.new('UICorner')
+    Slider.Name = randomString()
+Slider.Parent = ScrollingFrame
+Slider.AnchorPoint = Vector2.new(0.5, 0.5)
+Slider.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
+Slider.BackgroundTransparency = 0.3
+Slider.BorderSizePixel = 0
+Slider.Position = UDim2.new(0.370129883, 0, 0, 0)
+Slider.Size = UDim2.new(1, 0, 0, 47)
+TextLabel_4.Name = randomString()
+TextLabel_4.Parent = Slider
+TextLabel_4.AnchorPoint = Vector2.new(0.5, 0.5)
+TextLabel_4.BackgroundColor3 = Color3.new(1, 1, 1)
+TextLabel_4.BackgroundTransparency = 1
+TextLabel_4.Position = UDim2.new(0.133766234, 0, 0.5, 0)
+TextLabel_4.Size = UDim2.new(0.217532471, 0, 1, 0)
+TextLabel_4.Font = Enum.Font.Gotham
+TextLabel_4.Text = text..'\n'..tostring(Value) 
+TextLabel_4.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
+TextLabel_4.TextScaled = true
+TextLabel_4.TextSize = 14
+TextLabel_4.TextWrapped = true
+TextLabel_4.TextXAlignment = Enum.TextXAlignment.Left
+
+ImageLabel_3.Name = randomString()
+ImageLabel_3.Parent = Slider
+ImageLabel_3.AnchorPoint = Vector2.new(1, 0)
+ImageLabel_3.BackgroundColor3 = Color3.new(1, 1, 1)
+ImageLabel_3.BackgroundTransparency = 1
+ImageLabel_3.BorderSizePixel = 0
+ImageLabel_3.Position = UDim2.new(0.949999988, 0, 0.300000012, 0)
+ImageLabel_3.Size = UDim2.new(0, 20, 0, 20)
+ImageLabel_3.Image = "rbxassetid://10734963191"
+
+Slider_3.Name = randomString()
+Slider_3.Parent = Slider
+Slider_3.AnchorPoint = Vector2.new(0.5, 0.5)
+Slider_3.BackgroundColor3 = Color3.new(0.2980392, 0.2980392, 0.2980392)
+Slider_3.BackgroundTransparency = 1
+Slider_3.BorderSizePixel = 0
+Slider_3.Position = UDim2.new(0.56704545, 0, 0.5, 0)
+Slider_3.Size = UDim2.new(0.612662435, 0, 1, 0)
+
+Slider_2.Name = randomString()
+Slider_2.Parent = Slider_3
+Slider_2.AnchorPoint = Vector2.new(0, 0.5)
+Slider_2.BackgroundColor3 = randomColor()
+Slider_2.BackgroundTransparency = 0.5
+Slider_2.BorderSizePixel = 0
+Slider_2.Position = UDim2.new(0, 0, 0.5, 0)
+Slider_2.Size = UDim2.new(0, 0, 1, 0)
+Slider_2.ZIndex = 2
+
+TextButton_4.Name = randomString()
+TextButton_4.Parent = Slider_3
+TextButton_4.AnchorPoint = Vector2.new(0.5, 0.5)
+TextButton_4.BackgroundColor3 = Color3.new(0, 0, 0)
+TextButton_4.BorderSizePixel = 0
+TextButton_4.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextButton_4.Size = UDim2.new(1, 0, 1, 0)
+TextButton_4.Font = Enum.Font.SourceSans
+TextButton_4.Text = ""
+TextButton_4.TextColor3 = Color3.new(0, 0, 0)
+TextButton_4.TextSize = 14
+TextButton_4.BackgroundTransparency = 1
+
+UICorner.CornerRadius = UDim.new(0,6)
+UICorner.Parent = Slider_2
+
+TextButton_4.MouseButton1Down:Connect(function()
+    Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 236) * Slider_2.AbsoluteSize.X) + tonumber(minvalue)) or 0
+    pcall(Call, Value)
+    Slider_2.Size = UDim2.new(0, math.clamp(mouse.X - Slider_2.AbsolutePosition.X, 0, 236), 0.5, 0)
+    moveconnection = mouse.Move:Connect(function()
+        TextLabel_4.Text = text..'\n'..tostring(Value) or 'nil'
+        Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 236) * Slider_2.AbsoluteSize.X) + tonumber(minvalue))
+         pcall(Call, Value)
+        Slider_2.Size = UDim2.new(0, math.clamp(mouse.X - Slider_2.AbsolutePosition.X, 0, 236), 0.5, 0)
+    end)
+    releaseconnection = uis.InputEnded:Connect(function(Mouse)
+        if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
+            Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 236) * Slider_2.AbsoluteSize.X) + tonumber(minvalue))
+            pcall(Call, Value)
+            Slider_2.Size = UDim2.new(0, math.clamp(mouse.X - Slider_2.AbsolutePosition.X, 0, 236), 0.5, 0)
+            moveconnection:Disconnect()
+            releaseconnection:Disconnect()
+        end
+    end)
+end)
+
+while true do 
+local colorTween = ts:Create(Slider_2, TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), { BackgroundColor3 = randomColor()})
+colorTween:Play()
+colorTween.Completed:Wait()
+end
+
+end
+
+function Tab:CreateSection(title)
+    local Section = Instance.new("Frame")
+    local TextLabel = Instance.new("TextLabel")
+local ImageLabel = Instance.new("ImageLabel")
 
 Section.Name = randomString()
-Section.Parent = Main
+Section.Parent = ScrollingFrame
 Section.AnchorPoint = Vector2.new(0.5, 0.5)
 Section.BackgroundColor3 = Color3.new(0.0470588, 0.0470588, 0.0470588)
 Section.BackgroundTransparency = 0.30000001192092896
 Section.BorderSizePixel = 0
 Section.Position = UDim2.new(0.370129883, 0, 0, 0)
-Section.Size = UDim2.new(1, 0, 0.0500000007, 0)
+Section.Size = UDim2.new(1, 0, 0, 47)
 
 TextLabel.Name = randomString()
 TextLabel.Parent = Section
@@ -199,62 +612,32 @@ ImageLabel.BorderSizePixel = 0
 ImageLabel.Position = UDim2.new(0.949999988, 0, 0.300000012, 0)
 ImageLabel.Size = UDim2.new(0, 20, 0, 20)
 ImageLabel.Image = "rbxassetid://10723384893"
+end
 
-Button.Name = randomString()
-Button.Parent = Main
-Button.AnchorPoint = Vector2.new(0.5, 0.5)
-Button.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
-Button.BackgroundTransparency = 0.20000000298023224
-Button.BorderSizePixel = 0
-Button.Position = UDim2.new(0.370129883, 0, 0, 0)
-Button.Size = UDim2.new(1, 0, 0.0500000007, 0)
-
-ImageLabel_2.Name = randomString()
-ImageLabel_2.Parent = Button
-ImageLabel_2.AnchorPoint = Vector2.new(1, 0)
-ImageLabel_2.BackgroundColor3 = Color3.new(1, 1, 1)
-ImageLabel_2.BackgroundTransparency = 1
-ImageLabel_2.BorderSizePixel = 0
-ImageLabel_2.Position = UDim2.new(0.949999988, 0, 0.300000012, 0)
-ImageLabel_2.Size = UDim2.new(0, 20, 0, 20)
-ImageLabel_2.Image = "rbxassetid://10734898355"
-
-TextLabel_2.Name = randomString()
-TextLabel_2.Parent = Button
-TextLabel_2.AnchorPoint = Vector2.new(0.5, 0.5)
-TextLabel_2.BackgroundColor3 = Color3.new(1, 1, 1)
-TextLabel_2.BackgroundTransparency = 1
-TextLabel_2.Position = UDim2.new(0.5, 0, 0.5, 0)
-TextLabel_2.Size = UDim2.new(0.949999988, 0, 0.5, 0)
-TextLabel_2.Font = Enum.Font.Gotham
-TextLabel_2.Text = "Aimbot"
-TextLabel_2.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
-TextLabel_2.TextScaled = true
-TextLabel_2.TextSize = 14
-TextLabel_2.TextWrapped = true
-TextLabel_2.TextXAlignment = Enum.TextXAlignment.Left
-
-TextButton_2.Name = randomString()
-TextButton_2.Parent = Button
-TextButton_2.AnchorPoint = Vector2.new(0.5, 0.5)
-TextButton_2.BackgroundColor3 = Color3.new(1, 1, 1)
-TextButton_2.BackgroundTransparency = 1
-TextButton_2.BorderSizePixel = 0
-TextButton_2.Position = UDim2.new(0.5, 0, 0.5, 0)
-TextButton_2.Size = UDim2.new(1, 0, 1, 0)
-TextButton_2.Font = Enum.Font.SourceSans
-TextButton_2.Text = ""
-TextButton_2.TextColor3 = Color3.new(0, 0, 0)
-TextButton_2.TextSize = 14
+function Tab:CreateToggle(text, StartingValue, Call)
+    local Toggle = Instance.new("Frame")
+    local Toggled2 = Instance.new("Frame")
+    local value = StartingValue
+local Toggled = Instance.new("Frame")
+local TextLabel_3 = Instance.new("TextLabel")
+local TextButton_3 = Instance.new("TextButton")
+local UICorner = Instance.new('UICorner')
+UICorner.Name = randomString()
+UICorner.CornerRadius = UDim.new(0,6)
+UICorner.Parent = Toggled
+local UICorner2 = Instance.new('UICorner')
+UICorner2.Name = randomString()
+UICorner2.CornerRadius = UDim.new(0,6)
+UICorner2.Parent = Toggled2
 
 Toggle.Name = randomString()
-Toggle.Parent = Main
+Toggle.Parent = ScrollingFrame
 Toggle.AnchorPoint = Vector2.new(0.5, 0.5)
 Toggle.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
 Toggle.BackgroundTransparency = 0.20000000298023224
 Toggle.BorderSizePixel = 0
 Toggle.Position = UDim2.new(0.370129883, 0, 0, 0)
-Toggle.Size = UDim2.new(1, 0, 0.0500000007, 0)
+Toggle.Size = UDim2.new(1, 0, 0, 47)
 
 Toggled.Name = randomString()
 Toggled.Parent = Toggle
@@ -263,6 +646,7 @@ Toggled.BackgroundColor3 = Color3.new(1, 0, 0)
 Toggled.BorderSizePixel = 0
 Toggled.Position = UDim2.new(0.949999988, 0, 0.5, 0)
 Toggled.Size = UDim2.new(0, 20, 0, 20)
+Toggled.ZIndex = 2
 
 TextLabel_3.Name = randomString()
 TextLabel_3.Parent = Toggle
@@ -272,7 +656,7 @@ TextLabel_3.BackgroundTransparency = 1
 TextLabel_3.Position = UDim2.new(0.5, 0, 0.5, 0)
 TextLabel_3.Size = UDim2.new(0.949999988, 0, 0.5, 0)
 TextLabel_3.Font = Enum.Font.Gotham
-TextLabel_3.Text = "Aimbot"
+TextLabel_3.Text = text
 TextLabel_3.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
 TextLabel_3.TextScaled = true
 TextLabel_3.TextSize = 14
@@ -291,197 +675,20 @@ TextButton_3.Font = Enum.Font.SourceSans
 TextButton_3.Text = ""
 TextButton_3.TextColor3 = Color3.new(0, 0, 0)
 TextButton_3.TextSize = 14
+TextButton_3.ZIndex = 5
 
-Slider.Name = randomString()
-Slider.Parent = Main
-Slider.AnchorPoint = Vector2.new(0.5, 0.5)
-Slider.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
-Slider.BackgroundTransparency = 0.30000001192092896
-Slider.BorderSizePixel = 0
-Slider.Position = UDim2.new(0.370129883, 0, 0, 0)
-Slider.Size = UDim2.new(1, 0, 0.0500000007, 0)
-
-TextLabel_4.Name = randomString()
-TextLabel_4.Parent = Slider
-TextLabel_4.AnchorPoint = Vector2.new(0.5, 0.5)
-TextLabel_4.BackgroundColor3 = Color3.new(1, 1, 1)
-TextLabel_4.BackgroundTransparency = 1
-TextLabel_4.Position = UDim2.new(0.133766234, 0, 0.5, 0)
-TextLabel_4.Size = UDim2.new(0.217532471, 0, 1, 0)
-TextLabel_4.Font = Enum.Font.Gotham
-TextLabel_4.Text = "Aimbot"
-TextLabel_4.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
-TextLabel_4.TextScaled = true
-TextLabel_4.TextSize = 14
-TextLabel_4.TextWrapped = true
-TextLabel_4.TextXAlignment = Enum.TextXAlignment.Left
-
-ImageLabel_3.Name = randomString()
-ImageLabel_3.Parent = Slider
-ImageLabel_3.AnchorPoint = Vector2.new(1, 0)
-ImageLabel_3.BackgroundColor3 = Color3.new(1, 1, 1)
-ImageLabel_3.BackgroundTransparency = 1
-ImageLabel_3.BorderSizePixel = 0
-ImageLabel_3.Position = UDim2.new(0.949999988, 0, 0.300000012, 0)
-ImageLabel_3.Size = UDim2.new(0, 20, 0, 20)
-ImageLabel_3.Image = "rbxassetid://10734963191"
-
-Slider_2.Name = randomString()
-Slider_2.Parent = Slider
-Slider_2.AnchorPoint = Vector2.new(0.5, 0.5)
-Slider_2.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
-Slider_2.BackgroundTransparency = 0.30000001192092896
-Slider_2.BorderSizePixel = 0
-Slider_2.Position = UDim2.new(0.56704545, 0, 0.5, 0)
-Slider_2.Size = UDim2.new(0.612662435, 0, 1, 0)
-
-TextButton_4.Name = randomString()
-TextButton_4.Parent = Slider_2
-TextButton_4.AnchorPoint = Vector2.new(0.5, 0.5)
-TextButton_4.BackgroundColor3 = Color3.new(0, 0, 0)
-TextButton_4.BorderSizePixel = 0
-TextButton_4.Position = UDim2.new(0.5, 0, 0.5, 0)
-TextButton_4.Size = UDim2.new(0.0199999996, 0, 1, 0)
-TextButton_4.Font = Enum.Font.SourceSans
-TextButton_4.Text = ""
-TextButton_4.TextColor3 = Color3.new(0, 0, 0)
-TextButton_4.TextSize = 14
-
-UIGridLayout.Name = randomString()
-UIGridLayout.Parent = Main
-UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIGridLayout.CellPadding = UDim2.new(0, 0, 0, 5)
-UIGridLayout.CellSize = UDim2.new(1, 0, 0, 47)
-
-Dropdown.Name = randomString()
-Dropdown.Parent = Main
-Dropdown.AnchorPoint = Vector2.new(0.5, 0.5)
-Dropdown.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
-Dropdown.BackgroundTransparency = 0.20000000298023224
-Dropdown.BorderSizePixel = 0
-Dropdown.Position = UDim2.new(0.370129883, 0, 0, 0)
-Dropdown.Size = UDim2.new(1, 0, 0.0500000007, 0)
-
-ImageLabel_4.Name = randomString()
-ImageLabel_4.Parent = Dropdown
-ImageLabel_4.AnchorPoint = Vector2.new(1, 0)
-ImageLabel_4.BackgroundColor3 = Color3.new(1, 1, 1)
-ImageLabel_4.BackgroundTransparency = 1
-ImageLabel_4.BorderSizePixel = 0
-ImageLabel_4.Position = UDim2.new(0.949999988, 0, 0.300000012, 0)
-ImageLabel_4.Size = UDim2.new(0, 20, 0, 20)
-ImageLabel_4.Image = "rbxassetid://10723433811"
-
-TextLabel_5.Name = randomString()
-TextLabel_5.Parent = Dropdown
-TextLabel_5.AnchorPoint = Vector2.new(0.5, 0.5)
-TextLabel_5.BackgroundColor3 = Color3.new(1, 1, 1)
-TextLabel_5.BackgroundTransparency = 1
-TextLabel_5.Position = UDim2.new(0.5, 0, 0.5, 0)
-TextLabel_5.Size = UDim2.new(0.949999988, 0, 0.5, 0)
-TextLabel_5.Font = Enum.Font.Gotham
-TextLabel_5.Text = "Aimbot"
-TextLabel_5.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
-TextLabel_5.TextScaled = true
-TextLabel_5.TextSize = 14
-TextLabel_5.TextWrapped = true
-TextLabel_5.TextXAlignment = Enum.TextXAlignment.Left
-
-TextButton_5.Name = randomString()
-TextButton_5.Parent = Dropdown
-TextButton_5.AnchorPoint = Vector2.new(0.5, 0.5)
-TextButton_5.BackgroundColor3 = Color3.new(1, 1, 1)
-TextButton_5.BackgroundTransparency = 1
-TextButton_5.BorderSizePixel = 0
-TextButton_5.Position = UDim2.new(0.5, 0, 0.5, 0)
-TextButton_5.Size = UDim2.new(1, 0, 1, 0)
-TextButton_5.Font = Enum.Font.SourceSans
-TextButton_5.Text = ""
-TextButton_5.TextColor3 = Color3.new(0, 0, 0)
-TextButton_5.TextSize = 14
-
-ScrollingFrame.Name = randomString()
-ScrollingFrame.Parent = Dropdown
-ScrollingFrame.Active = true
-ScrollingFrame.AnchorPoint = Vector2.new(0.5, 0)
-ScrollingFrame.BackgroundColor3 = Color3.new(1, 1, 1)
-ScrollingFrame.BackgroundTransparency = 1
-ScrollingFrame.BorderSizePixel = 0
-ScrollingFrame.Position = UDim2.new(0.5, 0, 1, 0)
-ScrollingFrame.Size = UDim2.new(1, 0, 3, 0)
-ScrollingFrame.ScrollBarThickness = 2
-
-UIGridLayout_2.Name = randomString()
-UIGridLayout_2.Parent = ScrollingFrame
-UIGridLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
-UIGridLayout_2.CellPadding = UDim2.new(0, 0, 0, 5)
-UIGridLayout_2.CellSize = UDim2.new(1, 0, 0, 25)
-
-DropdownButton.Name = randomString()
-DropdownButton.Parent = ScrollingFrame
-DropdownButton.AnchorPoint = Vector2.new(0.5, 0.5)
-DropdownButton.BackgroundColor3 = Color3.new(0.0470588, 0.0470588, 0.0470588)
-DropdownButton.BorderSizePixel = 0
-DropdownButton.Position = UDim2.new(0.370129883, 0, 0, 0)
-DropdownButton.Size = UDim2.new(1, 0, 0.0500000007, 0)
-
-ImageLabel_5.Name = randomString()
-ImageLabel_5.Parent = DropdownButton
-ImageLabel_5.AnchorPoint = Vector2.new(1, 0.5)
-ImageLabel_5.BackgroundColor3 = Color3.new(1, 1, 1)
-ImageLabel_5.BackgroundTransparency = 1
-ImageLabel_5.BorderSizePixel = 0
-ImageLabel_5.Position = UDim2.new(0.949999988, 0, 0.5, 0)
-ImageLabel_5.Size = UDim2.new(0, 20, 0, 20)
-ImageLabel_5.Image = "rbxassetid://10734898355"
-
-TextLabel_6.Name = randomString()
-TextLabel_6.Parent = DropdownButton
-TextLabel_6.AnchorPoint = Vector2.new(0.5, 0.5)
-TextLabel_6.BackgroundColor3 = Color3.new(1, 1, 1)
-TextLabel_6.BackgroundTransparency = 1
-TextLabel_6.Position = UDim2.new(0.5, 0, 0.5, 0)
-TextLabel_6.Size = UDim2.new(0.949999988, 0, 0.5, 0)
-TextLabel_6.Font = Enum.Font.Gotham
-TextLabel_6.Text = "Aimbot"
-TextLabel_6.TextColor3 = Color3.new(0.588235, 0.588235, 0.588235)
-TextLabel_6.TextScaled = true
-TextLabel_6.TextSize = 14
-TextLabel_6.TextWrapped = true
-TextLabel_6.TextXAlignment = Enum.TextXAlignment.Left
-
-TextButton_6.Name = randomString()
-TextButton_6.Parent = DropdownButton
-TextButton_6.AnchorPoint = Vector2.new(0.5, 0.5)
-TextButton_6.BackgroundColor3 = Color3.new(1, 1, 1)
-TextButton_6.BackgroundTransparency = 1
-TextButton_6.BorderSizePixel = 0
-TextButton_6.Position = UDim2.new(0.5, 0, 0.5, 0)
-TextButton_6.Size = UDim2.new(1, 0, 1, 0)
-TextButton_6.Font = Enum.Font.SourceSans
-TextButton_6.Text = ""
-TextButton_6.TextColor3 = Color3.new(0, 0, 0)
-TextButton_6.TextSize = 14
-
-UIPadding_2.Name = randomString()
-UIPadding_2.Parent = ScrollingFrame
-UIPadding_2.PaddingTop = UDim.new(0, 5)
+TextButton_3.MouseButton1Down:Connect(function()
+    value = not value 
+    if value then
+        Toggled.BackgroundColor3 = Color3.new(0, 1, 0)
+    else
+        Toggled.BackgroundColor3 = Color3.new(1, 0, 0)
+    end
+     pcall(Call, value)
+end)
 end
-local Window = {}
-function Window:CreateTab(text)
-local TextButton = Instance.new("TextButton")
-TextButton.Name = randomString()
-TextButton.Parent = Tabs
-TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
-TextButton.BackgroundTransparency = 1
-TextButton.BorderSizePixel = 0
-TextButton.Size = UDim2.new(1, 0, 0.100000001, 0)
-TextButton.AutoButtonColor = false
-TextButton.Font = Enum.Font.Gotham
-TextButton.Text = text
-TextButton.TextColor3 = Color3.new(0.352941, 0.352941, 0.352941)
-TextButton.TextSize = 14
-TextButton.TextWrapped = true
+return Tab
 end
-
+return Window
+end
 return Sticky
