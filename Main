@@ -4,6 +4,7 @@ local hum = chr:WaitForChild('Humanoid')
 local hrp = chr:WaitForChild('HumanoidRootPart')
 local rs = game:GetService('RunService')
 local uis = game:GetService('UserInputService')
+local vim = game:GetService('VirtualInputManager')
 local supportedStatus = 'Unsupported'
 local ts = game:GetService('TweenService')
 local gameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
@@ -684,4 +685,31 @@ return Tab
 end
 return Window
 end
+
+function getPlr()
+    local dist, targ = math.huge
+    for i,v in next, game.Players:GetChildren() do
+        if v.Character:IsA('Model') and v.Character:FindFirstChild('Humanoid') and v.Character.Humanoid.Health > 0 and v.Character:FindFirstChild('HumanoidRootPart') and v ~= plr then
+            local mag = (root.Position - v.Character.HumanoidRootPart.Position).magnitude
+            if dist > mag then
+                dist = mag
+                targ = v
+            end
+        end
+    end
+    return targ
+end
+
+function pressKey(Key,holdTime)
+vim:SendKeyEvent(true, Key,false,game)
+wait(holdTime)
+vim:SendKeyEvent(false, Key,false,game)
+end
+
+function pressMB(x,y,mb, holdTime)
+vim:SendMouseButtonEvent(x,y, mb, true, game, 1)
+wait(holdTime)
+vim:SendMouseButtonEvent(x,y, mb, false, game, 1)
+end
+
 return Sticky
