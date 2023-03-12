@@ -566,13 +566,6 @@ TextButton_4.MouseButton1Down:Connect(function()
         end
     end)
 end)
-
-while true do 
-local colorTween = ts:Create(Slider_2, TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), { BackgroundColor3 = randomColor()})
-colorTween:Play()
-colorTween.Completed:Wait()
-end
-
 end
 
 function Tab:CreateSection(title)
