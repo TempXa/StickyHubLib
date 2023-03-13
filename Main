@@ -1,5 +1,3 @@
-getgenv().supportedStatus = nil
-
 repeat wait() until game:IsLoaded() and getgenv().supportedStatus ~= nil 
 
 local espValue = false
