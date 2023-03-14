@@ -1,11 +1,8 @@
 repeat wait() until game:IsLoaded() and getgenv().supportedStatus ~= nil 
 
+local players = game:GetService("Players");
+local workspace = game:GetService("Workspace");
 local espValue = false
-local camera = game:GetService("Workspace").CurrentCamera
-local CurrentCamera = workspace.CurrentCamera
-local worldToViewportPoint = CurrentCamera.worldToViewportPoint
-local HeadOff = Vector3.new(0, 0.5, 0)
-local LegOff = Vector3.new(0,3,0)
 local plr = game.Players.LocalPlayer
 local chr = plr.Character
 local hum = chr:WaitForChild('Humanoid')
@@ -19,10 +16,20 @@ local mouse = plr:GetMouse()
 local CurrentSpec;
 local PositionSet;
 local r,g,b = 1,1,1
+local camera = workspace.CurrentCamera;
+local get_cframe = workspace.GetModelCFrame;
+local wtvp = camera.WorldToViewportPoint;
+local viewport_size = camera.ViewportSize;
+local cache = {};
+local new_drawing = Drawing.new;
+local new_vector2 = Vector2.new;
+local new_color3 = Color3.new;
+local rad = math.rad;
+local tan = math.tan;
+local floor = math.floor;
 
 local MainBackgrounds = {}
 local PlayerListHolder = {}
-local ESPs = {}
 local Sliders = {}
 
 function randomString(length)
@@ -40,8 +47,8 @@ function randomString(length)
 	return str
 end
 
-function randomColor()
-local color = Color3.fromRGB(math.random(1,255),math.random(1,255),math.random(1,255))
+function Color(red,green,blue)
+local color = Color3.fromRGB(red,green,blue)
 
 return color
 end
@@ -65,7 +72,7 @@ local RAHHH = {}
 local Windows = {}
 
 rs.RenderStepped:Connect(function()
-UIStroke1.Color = Color3.fromRGB(r,g,b)
+UIStroke1.Color = Color(r,g,b)
 end)
 
 UIStroke1.Parent = Background
@@ -101,7 +108,7 @@ Background.Size = UDim2.new(1, 0, 0, 450)
 Background.Image = "rbxassetid://12740629971"
 Background.ScaleType = Enum.ScaleType.Crop
 
-table.insert(MainBackgrounds, Background)
+table.insert(MainBackgrounds, dragPart)
 
 Tabs.Name = randomString()
 Tabs.Parent = Background
@@ -589,7 +596,7 @@ table.insert(Sliders, Slider_2)
 Slider_2.Name = randomString()
 Slider_2.Parent = Slider_3
 Slider_2.AnchorPoint = Vector2.new(0, 0.5)
-Slider_2.BackgroundColor3 = Color3.fromRGB(r,g,b)
+Slider_2.BackgroundColor3 = Color(r,g,b)
 Slider_2.BackgroundTransparency = 0.5
 Slider_2.BorderSizePixel = 0
 Slider_2.Position = UDim2.new(0, 0, 0.5, 0)
@@ -784,226 +791,122 @@ end
 
 function loadVisual(window)
     
-    game.Players.PlayerAdded:Connect(function(v)
-if not espValue then
-    for i,v in pairs(ESPs) do
-    v.Visible = false
+    local function create_esp(player)
+        if espValue then
+    local esp = {};
+
+    esp.box = new_drawing("Square");
+    esp.box.Color = new_color3(1,1,1);
+    esp.box.Thickness = 3;
+    esp.box.Filled = false;
+
+    esp.name = new_drawing("Text");
+    esp.name.Color = new_color3(1,1,1);
+    esp.name.Size = 14;
+    esp.name.Font = 1;
+    esp.name.Center = true;
+
+    esp.distance = new_drawing("Text");
+    esp.distance.Color = new_color3(1,1,1);
+    esp.distance.Size = 14;
+    esp.distance.Font = 1;
+    esp.distance.Center = true;
+
+    esp.healthbar = new_drawing('Square');
+    esp.healthbar.Color = new_color3(0,0.8,0);
+    esp.healthbar.Filled = true;
+    
+    esp.healthbaroutline = new_drawing('Square');
+    esp.healthbaroutline.Color = new_color3(0,0,0);
+    esp.healthbaroutline.Thickness = 4;
+    esp.healthbaroutline.Filled = true;
+    
+    cache[player] = esp;
+    end
 end
-else
-    local BoxOutline = Drawing.new("Square")
-    BoxOutline.Visible = false
-    BoxOutline.Color = Color3.new(0,0,0)
-    BoxOutline.Thickness = 5
-    BoxOutline.Transparency = 1
-    BoxOutline.Filled = false
 
-    local Box = Drawing.new("Square")
-    Box.Visible = false
-    Box.Color = Color3.new(0,0,0)
-    Box.Thickness = 2
-    Box.Transparency = 1
-    Box.Filled = false
+local function remove_esp(player)
+if cache[player] ~= nil then
+    for _, drawing in next, cache[player] do
+        drawing:Remove();
+    end
 
-    local HealthBarOutline = Drawing.new("Square")
-    HealthBarOutline.Thickness = 3
-    HealthBarOutline.Filled = false
-    HealthBarOutline.Color = Color3.new(0,0,0)
-    HealthBarOutline.Transparency = 1
-    HealthBarOutline.Visible = false
+    cache[player] = nil;
+    end
+end
 
-    local HealthBar = Drawing.new("Square")
-    HealthBar.Thickness = 1
-    HealthBar.Filled = true
-    HealthBar.Transparency = 1
-    HealthBar.Visible = false
-    
-    table.insert(ESPs, HealthBar)
-     table.insert(ESPs, HealthBarOutline)
-      table.insert(ESPs, Box)
-        table.insert(ESPs, BoxOutline)
-        
-    local NamePlate = Drawing.new('Text')
-    NamePlate.Center = true
-    NamePlate.Outline = true
-    NamePlate.Visible = false
-    
+local function update_esp()
+if espValue then
+    for player, esp in next, cache do
+        local character = player and player.Character;
+        if character and (not player.Team or player.Team ~= plr.Team) then
+            local cframe = get_cframe(character);
+            local position, visible = wtvp(camera, cframe.Position);
 
-    function boxesp()
-  
-        game:GetService("RunService").RenderStepped:Connect(function()
-            NamePlate.Color = Color3.fromRGB(r,g,b)
-            Box.Color = Color3.fromRGB(r,g,b)
-            if espValue and v.Character ~= nil and v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil and v ~= plr and v.Character:FindFirstChild('Head') and v.Character.Humanoid.Health > 0 then
-                NamePlate.Text = v.Name..'\nHealth: '..math.floor(v.Character:WaitForChild('Humanoid').Health)..'/'..math.floor(v.Character:WaitForChild('Humanoid').MaxHealth)
-                local Vector, onScreen = camera:worldToViewportPoint(v.Character.HumanoidRootPart.Position)
-                local RootPart = v.Character.HumanoidRootPart
-                local Head = v.Character:WaitForChild('Head')
-                local RootPosition, RootVis = worldToViewportPoint(CurrentCamera, RootPart.Position)
-                local HeadPosition = worldToViewportPoint(CurrentCamera, Head.Position + HeadOff)
-                local HeadName = worldToViewportPoint(CurrentCamera, Head.Position + Vector3.new(0, 3, 0))
-                local LegPosition = worldToViewportPoint(CurrentCamera, RootPart.Position - LegOff)
+            esp.box.Visible = visible;
+            esp.name.Visible = visible;
+            esp.distance.Visible = visible;
+            esp.healthbar.Visible = visible;
+            esp.healthbaroutline.Visible = visible;
 
-                if onScreen then
-                    BoxOutline.Size = Vector2.new(2000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
-                    BoxOutline.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
-                    BoxOutline.Visible = true
+            if visible then
+                local scale_factor = 1 / (position.Z * tan(rad(camera.FieldOfView * 0.5)) * 2) * 100;
+                local width, height = floor(35 * scale_factor), floor(50 * scale_factor);
+                local x, y = floor(position.X), floor(position.Y);
 
-                    Box.Size = Vector2.new(2000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
-                    Box.Position = Vector2.new(RootPosition.X - Box.Size.X / 2, RootPosition.Y - Box.Size.Y / 2)
-                    Box.Visible = true
-
-                    HealthBarOutline.Size = Vector2.new(4, HeadPosition.Y - LegPosition.Y)
-                    HealthBarOutline.Position = BoxOutline.Position - Vector2.new(6,0)
-                    HealthBarOutline.Visible = true
-
-                    
-                    HealthBar.Size = Vector2.new(4, (HeadPosition.Y - LegPosition.Y) / (v.Character:WaitForChild('Humanoid').MaxHealth / math.clamp(v.Character:WaitForChild('Humanoid').Health, 0, v.Character:WaitForChild('Humanoid').MaxHealth)))
-                    HealthBar.Position = Vector2.new(Box.Position.X - 6, Box.Position.Y + (1/HealthBar.Size.Y))
-		            HealthBar.Color = Color3.fromRGB(255 - 255 / (v.Character:WaitForChild('Humanoid').MaxHealth / v.Character:WaitForChild('Humanoid').Health), 255 / (v.Character:WaitForChild('Humanoid').MaxHealth / v.Character:WaitForChild('Humanoid').Health), 0)                    
-		            HealthBar.Visible = true
-		            
-		            NamePlate.OutlineColor = Color3.fromRGB(0,0,0)
-		            NamePlate.Size = 500
-		            NamePlate.Position = Vector2.new(RootPosition.X, HeadName.Y)
-		            NamePlate.Visible = true
-		    
-
-
-                else
-                  
-                    BoxOutline.Visible = false
-                    Box.Visible = false
-                    HealthBarOutline.Visible = false
-                    HealthBar.Visible = false
-                     NamePlate.Visible = false
-                end
-            else
+                esp.box.Size = new_vector2(width, height);
+                esp.box.Position = new_vector2(floor(x - width * 0.5), floor(y - height * 0.5));
+                esp.box.Color = Color(r,g,b);
                 
-                    BoxOutline.Visible = false
-                    Box.Visible = false
-                    HealthBarOutline.Visible = false
-                    HealthBar.Visible = false
-                     NamePlate.Visible = false
+                esp.healthbar.Size = new_vector2(width / 7, -height / (player.Character:WaitForChild('Humanoid').MaxHealth / player.Character:WaitForChild('Humanoid').Health));
+                esp.healthbar.Position = new_vector2(floor(esp.box.Position.X - width * 0.22), floor(y - height * -0.5));
+                esp.healthbar.Color = Color3.fromRGB(255 - 255 / (player.Character:WaitForChild('Humanoid').MaxHealth / player.Character:WaitForChild('Humanoid').Health), 255 / (player.Character:WaitForChild('Humanoid').MaxHealth / player.Character:WaitForChild('Humanoid').Health), 0);
+                esp.healthbar.ZIndex = 2
                 
+                esp.healthbaroutline.Size = new_vector2(floor(width / 5.46), height * 1.02);
+                esp.healthbaroutline.Position = new_vector2(floor(esp.box.Position.X - width * 0.24), floor(y - height * 0.5));
+                esp.healthbaroutline.Color = Color3.fromRGB(0,0,0);
+                
+                esp.name.Color = Color(r,g,b);
+                esp.name.Text = player.Name..'\n'..floor(player.Character.Humanoid.Health)..'/'..floor(player.Character.Humanoid.MaxHealth);
+                esp.name.Position = new_vector2(x, floor(y - height * 0.5 - esp.name.TextBounds.Y));
+                
+                esp.distance.Color = Color(r,g,b);
+                esp.distance.Text = floor(position.Z) .. "m";
+                esp.distance.Position = new_vector2(x, floor(y + height * 0.5));
             end
-        end)
+        else
+            esp.box.Visible = false;
+            esp.name.Visible = false;
+            esp.distance.Visible = false;
+            esp.healthbar.Visible = false;
+            esp.healthbaroutline.Visible = false;
+            end
+        end
     end
-    coroutine.wrap(boxesp)()
-    end
-end)
+end
 
+players.PlayerAdded:Connect(create_esp);
+players.PlayerRemoving:Connect(remove_esp);
+rs.RenderStepped:Connect(update_esp);
     
 local Visual = window:CreateTab('Visual')
 local ESPSect = Visual:CreateSection('ESP')
 local ESPTog = Visual:CreateToggle('Player ESP', false, function(Value)
     espValue = Value
-    for i,v in pairs(game.Players:GetChildren()) do
-if not espValue then
-    for i,v in pairs(ESPs) do
-    v.Visible = false
-end
+    if espValue then
+       for _, player in next, players:GetPlayers() do
+    if player ~= plr then
+        create_esp(player);
+    end
+end 
 else
-    local BoxOutline = Drawing.new("Square")
-    BoxOutline.Visible = false
-    BoxOutline.Color = Color3.new(0,0,0)
-    BoxOutline.Thickness = 5
-    BoxOutline.Transparency = 1
-    BoxOutline.Filled = false
-
-    local Box = Drawing.new("Square")
-    Box.Visible = false
-    Box.Color = Color3.new(0,0,0)
-    Box.Thickness = 2
-    Box.Transparency = 1
-    Box.Filled = false
-
-    local HealthBarOutline = Drawing.new("Square")
-    HealthBarOutline.Thickness = 3
-    HealthBarOutline.Filled = false
-    HealthBarOutline.Color = Color3.new(0,0,0)
-    HealthBarOutline.Transparency = 1
-    HealthBarOutline.Visible = false
-
-    local HealthBar = Drawing.new("Square")
-    HealthBar.Thickness = 1
-    HealthBar.Filled = true
-    HealthBar.Transparency = 1
-    HealthBar.Visible = false
-    
-    table.insert(ESPs, HealthBar)
-     table.insert(ESPs, HealthBarOutline)
-      table.insert(ESPs, Box)
-        table.insert(ESPs, BoxOutline)
-        
-    local NamePlate = Drawing.new('Text')
-    NamePlate.Center = true
-    NamePlate.Outline = true
-    NamePlate.Visible = false
-    
-
-    function boxesp()
-  
-        game:GetService("RunService").RenderStepped:Connect(function()
-            NamePlate.Color = Color3.fromRGB(r,g,b)
-            Box.Color = Color3.fromRGB(r,g,b)
-            if espValue and v.Character ~= nil and v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil and v ~= plr and v.Character:FindFirstChild('Head') and v.Character.Humanoid.Health > 0 then
-                NamePlate.Text = v.Name..'\nHealth: '..math.floor(v.Character:WaitForChild('Humanoid').Health)..'/'..math.floor(v.Character:WaitForChild('Humanoid').MaxHealth)
-                local Vector, onScreen = camera:worldToViewportPoint(v.Character.HumanoidRootPart.Position)
-                local RootPart = v.Character.HumanoidRootPart
-                local Head = v.Character:WaitForChild('Head')
-                local RootPosition, RootVis = worldToViewportPoint(CurrentCamera, RootPart.Position)
-                local HeadPosition = worldToViewportPoint(CurrentCamera, Head.Position + HeadOff)
-                local HeadName = worldToViewportPoint(CurrentCamera, Head.Position + Vector3.new(0,3,0))
-                local LegPosition = worldToViewportPoint(CurrentCamera, RootPart.Position - LegOff)
-
-                if onScreen then
-                    BoxOutline.Size = Vector2.new(2000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
-                    BoxOutline.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
-                    BoxOutline.Visible = true
-
-                    Box.Size = Vector2.new(2000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
-                    Box.Position = Vector2.new(RootPosition.X - Box.Size.X / 2, RootPosition.Y - Box.Size.Y / 2)
-                    Box.Visible = true
-
-                    HealthBarOutline.Size = Vector2.new(4, HeadPosition.Y - LegPosition.Y)
-                    HealthBarOutline.Position = BoxOutline.Position - Vector2.new(6,0)
-                    HealthBarOutline.Visible = true
-
-                    
-                    HealthBar.Size = Vector2.new(4, (HeadPosition.Y - LegPosition.Y) / (v.Character:WaitForChild('Humanoid').MaxHealth / math.clamp(v.Character:WaitForChild('Humanoid').Health, 0, v.Character:WaitForChild('Humanoid').MaxHealth)))
-                    HealthBar.Position = Vector2.new(Box.Position.X - 6, Box.Position.Y + (1/HealthBar.Size.Y))
-		            HealthBar.Color = Color3.fromRGB(255 - 255 / (v.Character:WaitForChild('Humanoid').MaxHealth / v.Character:WaitForChild('Humanoid').Health), 255 / (v.Character:WaitForChild('Humanoid').MaxHealth / v.Character:WaitForChild('Humanoid').Health), 0)                    
-		            HealthBar.Visible = true
-		            
-		            NamePlate.OutlineColor = Color3.fromRGB(0,0,0)
-		            NamePlate.Size = 500 
-		            NamePlate.Position = Vector2.new(RootPosition.X, HeadName.Y)
-		            NamePlate.Visible = true
-		    
-
-
-                else
-                  
-                    BoxOutline.Visible = false
-                    Box.Visible = false
-                    HealthBarOutline.Visible = false
-                    HealthBar.Visible = false
-                     NamePlate.Visible = false
-                end
-            else
-                
-                    BoxOutline.Visible = false
-                    Box.Visible = false
-                    HealthBarOutline.Visible = false
-                    HealthBar.Visible = false
-                     NamePlate.Visible = false
-                
-            end
-        end)
-    end
-    coroutine.wrap(boxesp)()
+    for _, player in next, players:GetPlayers() do
+    if player ~= plr then
+        remove_esp(player);
     end
 end
+    end
 end)
 
 local Spectate = Visual:CreateSection('Spectate')
@@ -1024,10 +927,10 @@ local PlayerList = Instance.new('ScrollingFrame')
 
 
 rs.RenderStepped:Connect(function()
-UIStroke1.Color = Color3.fromRGB(r,g,b)
+UIStroke1.Color = Color(r,g,b)
 end)
 
-table.insert(MainBackgrounds, Background)
+table.insert(MainBackgrounds, dragPart)
 
 UIStroke1.Parent = Background
 UIStroke1.Thickness = 2.5
@@ -1392,21 +1295,29 @@ local SliderColor = settings:CreateSection('Slider / ESP Colors')
 local Red = settings:CreateSlider('Red',1,255,function(Value)
     r = Value
     for i,v in pairs(Sliders) do
-        v.BackgroundColor3 = Color3.fromRGB(r,g,b)
+        v.BackgroundColor3 = Color(r,g,b)
     end
 end)
 local Green = settings:CreateSlider('Green',1,255,function(Value)
     g = Value
     for i,v in pairs(Sliders) do
-        v.BackgroundColor3 = Color3.fromRGB(r,g,b)
+        v.BackgroundColor3 = Color(r,g,b)
     end
 end)
 local Blue = settings:CreateSlider('Blue',1,255,function(Value)
     b = Value
     for i,v in pairs(Sliders) do
-        v.BackgroundColor3 = Color3.fromRGB(r,g,b)
+        v.BackgroundColor3 = Color(r,g,b)
     end
 end)
+
+local CloseSect = settings:CreateSection('Destroy GUI')
+local Close = settings:CreateButton('Close GUI', function()
+for i,v in pairs(MainBackgrounds) do
+    table.remove(MainBackgrounds, i)
+    v.Parent:Destroy()
+        end
+    end)
 end
  
 uis.InputBegan:Connect(function(input, Processed)
@@ -1416,4 +1327,5 @@ if input.KeyCode == Enum.KeyCode.RightControl and not Processed then
         end
     end
 end)
+
 return Sticky
