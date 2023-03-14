@@ -816,11 +816,6 @@ function loadVisual(window)
     esp.healthbar.Color = new_color3(0,0.8,0);
     esp.healthbar.Filled = true;
     
-    esp.healthbaroutline = new_drawing('Square');
-    esp.healthbaroutline.Color = new_color3(0,0,0);
-    esp.healthbaroutline.Thickness = 4;
-    esp.healthbaroutline.Filled = true;
-    
     cache[player] = esp;
     end
 end
@@ -847,7 +842,7 @@ if espValue then
             esp.name.Visible = visible;
             esp.distance.Visible = visible;
             esp.healthbar.Visible = visible;
-            esp.healthbaroutline.Visible = visible;
+ 
 
             if visible then
                 local scale_factor = 1 / (position.Z * tan(rad(camera.FieldOfView * 0.5)) * 2) * 100;
@@ -862,10 +857,7 @@ if espValue then
                 esp.healthbar.Position = new_vector2(floor(esp.box.Position.X - width * 0.22), floor(y - height * -0.5));
                 esp.healthbar.Color = Color3.fromRGB(255 - 255 / (player.Character:WaitForChild('Humanoid').MaxHealth / player.Character:WaitForChild('Humanoid').Health), 255 / (player.Character:WaitForChild('Humanoid').MaxHealth / player.Character:WaitForChild('Humanoid').Health), 0);
                 esp.healthbar.ZIndex = 2
-                
-                esp.healthbaroutline.Size = new_vector2(floor(width / 5.46), height * 1.02);
-                esp.healthbaroutline.Position = new_vector2(floor(esp.box.Position.X - width * 0.24), floor(y - height * 0.5));
-                esp.healthbaroutline.Color = Color3.fromRGB(0,0,0);
+    
                 
                 esp.name.Color = Color(r,g,b);
                 esp.name.Text = player.Name..'\n'..floor(player.Character.Humanoid.Health)..'/'..floor(player.Character.Humanoid.MaxHealth);
@@ -880,7 +872,6 @@ if espValue then
             esp.name.Visible = false;
             esp.distance.Visible = false;
             esp.healthbar.Visible = false;
-            esp.healthbaroutline.Visible = false;
             end
         end
     end
