@@ -542,9 +542,9 @@ end)
     end
 end
 
-function Tab:CreateSlider(text,low,high,Call)
+function Tab:CreateSlider(text,low,start,high,Call)
     local Sliding = false
-    local Value = low or 0
+    local Value = start or low or 0
     local maxvalue = high or 100
     local minvalue = low or 0
     
