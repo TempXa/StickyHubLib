@@ -1326,19 +1326,19 @@ end
 function loadSettings(window)
 local settings = window:CreateTab('Settings')
 local SliderColor = settings:CreateSection('Slider / ESP Colors')
-local Red = settings:CreateSlider('Red',1,255,function(Value)
+local Red = settings:CreateSlider('Red',1,1,255,function(Value)
     r = Value
     for i,v in pairs(Sliders) do
         v.BackgroundColor3 = Color(r,g,b)
     end
 end)
-local Green = settings:CreateSlider('Green',1,255,function(Value)
+local Green = settings:CreateSlider('Green',1,1,255,function(Value)
     g = Value
     for i,v in pairs(Sliders) do
         v.BackgroundColor3 = Color(r,g,b)
     end
 end)
-local Blue = settings:CreateSlider('Blue',1,255,function(Value)
+local Blue = settings:CreateSlider('Blue',1,1,255,function(Value)
     b = Value
     for i,v in pairs(Sliders) do
         v.BackgroundColor3 = Color(r,g,b)
